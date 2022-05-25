@@ -1,0 +1,26 @@
+
+{% extends 'base.html' %}
+{% load socialaccount %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div class="col-md-10 offset-md-1 mt-5">
+        <div class="jumbotron">
+            <h1 class="display-4">User Login.</h1>
+            <hr class="my-4">
+            <form method="POST" class="form-group">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <p><a href="{% url 'password_reset' %}">Forgotten your password?</a></p>
+                <p>Don't have and account? <a href="http://127.0.0.1:8000/account/signup/">Create Here</a></p>
+                <button type='Submit' class="btn btn-success  mr-3">Login</button>
+            </form>
+            <form method="POST" action="{% provider_login_url 'google' %}">
+                {% csrf_token %}
+                    <button type='Submit' class="btn btn-danger"><i class="fab fa-google pt-1 mr-1" style="font-size:19px;color:white"></i>  Login with Google</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

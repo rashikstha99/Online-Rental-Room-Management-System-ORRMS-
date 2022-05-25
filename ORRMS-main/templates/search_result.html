@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+<style>
+
+.boxed {
+  border: 1px solid black;
+  margin: 10px;
+   background-color: lightblue;
+}
+
+.container-1{
+    background-color:#00FFFF;
+    padding-top:20px;
+    }
+
+.modal-content{
+    background-color:#F0FFFF;
+    width:450px;
+}
+.modal-body{
+    margin-left:20px;
+    width:400px;
+}
+
+
+
+</style>
+{% if error %}
+<div class="container-1" style="text-align:center;">
+    <h1 class="text-danger">{{ error }}</h1>
+    <p>If you want to be further notified when an property is added in the location.</p>
+    <p>Please, add the following location in your watchlist and you can view those property when added in <strong>My
+        Watchlist</strong> section.</p>
+    <div>
+        <a class="btn btn-second mt-1" type="button" data-toggle="modal" data-target="#exampleModal">Add to
+            watchlist</a>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" style="text-align:left;">
+                        <h1 class="modal-title mb-3" style="color:black;">Add to watchlist</h1>
+                        <form action="{% url 'watchlist' %}" method="POST">
+                            {% csrf_token %}
+                            {{ watchlist_form | crispy}}
+                            <button type="submit" class="btn btn-dark px-4 mt-1">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="col-md-12">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            {% if error_view_flat %}
+            {% for items in error_view_flat %}
+            <div class="card mr-1 ml-3 mt-4 " style="width: 18rem;">
+                <div id="carouselExampleControls{{items.flat_id}}" class="carousel slide"
+                     data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img class="d-block" style="width:100%;height:200px;"
+                                 src="{{ items.flat_images.bedroom_img.url }}"
+                                 alt="First slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block" style="width:100%;height:200px;"
+                                 src="{{ items.flat_images.livingroom_img.url }}"
+                                 alt="Second slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block" style="width:100%;height:200px;"
+                                 src="{{ items.flat_images.kitchen_img.url }}"
+                                 alt="Second slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block" style="width:100%;height:200px;"
+                                 src="{{ items.flat_images.bathroom_img.url }}"
+                                 alt="Second slide">
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls{{items.pk}}"
+                       role="button"
+                       data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls{{items.flat_id}}"
+                       role="button"
+                       data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Rs. {{items.price}}</h5>
+                    <p style="color:#00334d;">{{items.location.municipality}}-{{items.location.ward_no}},
+                        {{items.location.district}},<br>
+                        {{items.location.state}}</p>
+                    <hr>
+                    <p style="color:#00334d;"><i class="fa fa-bed" style="font-size:20px"></i> {{ items.bedroom_no }}-Bed
+                        <i class="fas fa-tv m-1"></i> {{ items.kitchen_no }}-Hall
+                        <i class="fa fa-bath ml-1" style="font-size:20px"></i> {{ items.bathroom_no }}-Bath</p>
+                    <form action="{% url 'property_details' items.flat_id %}" method="POST"
+                          class="d-inline">
+                        {% csrf_token %}
+                        <button type='Submit' class="btn btn-dark">View Details</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            {% for items in error_view_room %}
+            <div class="card mr-1 ml-3 mt-4 " style="width: 18rem;">
+                <img class="card-img-top" style="width:100%;height:200px;"
+                     src="{{ items.room_images.room_img.url }}"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Rs. {{items.price}}</h5>
+                    <p style="color:#00334d;">{{items.location.municipality}}-{{items.location.ward_no}},
+                        {{items.location.district}},<br>
+                        {{items.location.state}}</p>
+                    <hr>
+                    <p style="color:#00334d;"><i class="fas fa-square mr-1"></i> {{ items.size }} Sq Ft</p>
+                    <form action="{% url 'room_details' items.id %}" method="POST"
+                          class="d-inline">
+                        {% csrf_token %}
+                        <button type='Submit' class="btn btn-dark">View Details</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="col-md-12">
+    <div class="container-fluid m-2">
+        <h1 class="mt-3" style="text-align:center;"><strong>Searched Result</strong></h1>
+        <div class="row">
+            {% if searched_flat %}
+            {% for items in searched_flat %}
+            <div class="card mr-1 ml-3 mt-4 " style="width: 18rem;">
+                <div id="carouselExampleControls{{items.flat_id}}" class="carousel slide"
+                     data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img class="d-block" style="width:100%;height:200px;"
+                                 src="{{ items.flat_images.bedroom_img.url }}"
+                                 alt="First slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block" style="width:100%;height:200px;"
+                                 src="{{ items.flat_images.livingroom_img.url }}"
+                                 alt="Second slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block" style="width:100%;height:200px;"
+                                 src="{{ items.flat_images.kitchen_img.url }}"
+                                 alt="Second slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block" style="width:100%;height:200px;"
+                                 src="{{ items.flat_images.bathroom_img.url }}"
+                                 alt="Second slide">
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls{{items.pk}}"
+                       role="button"
+                       data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls{{items.flat_id}}"
+                       role="button"
+                       data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Rs. {{items.price}}</h5>
+                    <p style="color:#00334d;">{{items.location.municipality}}-{{items.location.ward_no}},
+                        {{items.location.district}},<br>
+                        {{items.location.state}}</p>
+                    <hr>
+                    <p style="color:#00334d;"><i class="fa fa-bed" style="font-size:20px"></i> {{ items.bedroom_no }}-Bed
+                        <i class="fas fa-tv m-1"></i> {{ items.kitchen_no }}-Hall
+                        <i class="fa fa-bath ml-1" style="font-size:20px"></i> {{ items.bathroom_no }}-Bath</p>
+                    <form action="{% url 'property_details' items.flat_id %}" method="POST"
+                          class="d-inline">
+                        {% csrf_token %}
+                        <button type='Submit' class="btn btn-dark">View Details</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            {% for items in searched_room %}
+            <div class="card mr-1 ml-3 mt-4 " style="width: 18rem;">
+                <img class="card-img-top" style="width:100%;height:200px;"
+                     src="{{ items.room_images.room_img.url }}"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Rs. {{items.price}}</h5>
+                    <p style="color:#00334d;">{{items.location.municipality}}-{{items.location.ward_no}},
+                        {{items.location.district}},<br>
+                        {{items.location.state}}</p>
+                    <hr>
+                    <p style="color:#00334d;"><i class="fas fa-square mr-1"></i> {{ items.size }} Sq Ft</p>
+                    <form action="{% url 'room_details' items.id %}" method="POST"
+                          class="d-inline">
+                        {% csrf_token %}
+                        <button type='Submit' class="btn btn-dark">View Details</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

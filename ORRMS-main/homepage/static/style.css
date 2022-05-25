@@ -1,0 +1,118 @@
+
+.big-text{
+        font-size: 52px ;
+        margin: 20px 0px;
+        color: #FF8C00;
+}
+
+a.btn{
+    margin: 30px 10px;
+    width: 150px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+a.btn-first{
+    background-color: #FF8C00;
+    color: #fff;
+}
+
+a.btn-second{
+    background-color: transparent;
+    border: 1px solid #FF8C00;
+    color: #333;
+}
+
+a.btn:hover{
+background: #FF8C00;
+border: none;
+color: #fff;
+box-shadow: 5px 5px 10px #999;
+transition: 0.3s;
+}
+
+.banner-info{
+margin: 59px 0;
+}
+
+.banner-image{
+margin: 10px 0;
+}
+
+footer{
+    background-color: rgb(33,33,33);
+    bottom: 0px;
+    color:white;
+}
+
+.main_content{
+    display: flex;
+}
+
+.main_content .box {
+    margin-top: 30px;
+    flex-basis: 50%;
+    padding-left: 40px;
+}
+
+.box h2{
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 17px;
+}
+
+.box .content{
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.left .content .social a{
+    color: white;
+}
+
+.left .content .social a span{
+    height: 35px;
+    width: 35px;
+    background-color:#FF8C00;
+    line-height: 35px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-right: 7px;
+}
+
+.left .content .social a span:hover{
+    background-color: black;
+    color: white;
+}
+
+.link{
+    margin-left: 10px;
+}
+
+.extra{
+    margin-left: 17px;
+    margin-right: 20px;
+}
+
+
+.center .content .fas{
+    font-size: 1.2175rem;
+    background-color: #FF8C00;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 50%;
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.footer-bottom{
+    text-align: center;
+    color: #999;
+    padding-top: 50px;
+    padding-bottom: 10px;
+}

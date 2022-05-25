@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+<style>
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+<!--  box-shadow: inset 0 0 5px grey;-->
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #A9A9A9;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2F4F4F;
+}
+
+.rating-wrapper{
+direction: rtl;
+}
+
+.rating-wrapper input{
+display: none;
+}
+
+.rating-wrapper label{
+    display: inline-block;
+    width:23px;
+    position: relative;
+    cursor: pointer;
+}
+
+.rating-wrapper label:before{
+    content: "\2605";
+    position: absolute;
+    font-size: 37px;
+    display: inline-block;
+    top: 0;
+    left: 0;
+}
+.rating-wrapper label:after{
+    content: "\2605";
+    position: absolute;
+    font-size: 37px;
+    display: inline-block;
+    top: 0;
+    left: 0;
+    color: yellow;
+    opacity: 0;
+}
+.rating-wrapper label:hover:after,
+.rating-wrapper label:hover ~ label:after,
+.rating-wrapper input:checked ~ label:after{
+    opacity: 1;
+}
+
+.boxed {
+  border: 1px solid #A9A9A9 ;
+  height: 37px;
+  width: 170px;
+  background-color: #00FFFF;
+  color: black;
+  margin-right: 5px;
+}
+
+.contact {
+ background: #333333;
+ width: 170px;
+ height: 40px;
+ color: white;
+ font-size: 20px;
+ font-weight: bold;
+ padding: 3px;
+ text-align: center;
+ border-radius: 25px;
+ }
+</style>
+
+<div class="col-md-12">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 ml-2 mt-1">
+                {% for images in image_list %}
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img class="d-block" style="width:100%;height:445px;" src="{{ images.room_img.url }}"
+                                 alt="First slide">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-5 pl-4">
+                {% for property in property_list %}
+                <p class="mb-2">Home / Property / Room</p>
+                <h2>Property Code : RN{{ property.id }}</h2>
+                <p><i class="fas fa-map-marker-alt"></i>
+                    {{property.location.municipality}}-{{property.location.ward_no}}, {{property.location.district}},
+                    {{property.location.state}}</p>
+                <h4 class="mb-3" style="color:#FF8C00;"><strong>Rs. {{property.price}}</strong></h4>
+                <h6>Facilities:</h6>
+                <div class="row ml-1 mb-1">
+                    <div class="boxed p-2">
+                        {% if property.water_facility is True %}
+                        <p style="font-size:15px;"><i class='fas fa-water' style='font-size:17px'></i> Boring Water
+                            (Yes) </p>
+                        {% else %}
+                        <p style="font-size:15px;"><i class='fas fa-water' style='font-size:17px'></i> Boring Water (No)
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="boxed p-2">
+                        {% if property.parking_facility is True %}
+                        <p style="font-size:15px;"><i class="fa fa-motorcycle" style="font-size:17px;"></i> Parking
+                            (Yes) </p>
+                        {% else %}
+                        <p style="font-size:15px;"><i class="fa fa-motorcycle" style="font-size:17px;"></i> Parking (No)
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="boxed ml-1 mb-3 p-2">
+                    {% if property.electricity is True %}
+                    <p style="font-size:15px;"><i class='fas fa-charging-station' style='font-size:17px'></i>
+                        Electricity (Yes) </p>
+                    {% else %}
+                    <p style="font-size:15px;"><i class='fas fa-charging-station' style='font-size:17px'></i>
+                        Electricity (No) </p>
+                    {% endif %}
+                </div>
+                <h6 class="mt-1">Property Description:</h6>
+                <p>{{ property.short_description }}</p>
+                <p class="contact pt-1"><i class="fas fa-phone-alt mr-2"></i>{{ property.phone_number }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <hr>
+    <div class="col-md-12">
+        <div class="row ml-4">
+            <div id="map" style="height:458px;" class="col-md-8">
+                <script>
+                    var map = L.map('map').setView([28.4072, 83.9240], 7);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    {% for items in property_list %}
+                    $.getJSON("{% url 'locationSingleRoom' items.id %}", function(data){
+                    var location = L.geoJSON(data).addTo(map)
+                    });
+                    {% endfor %}
+                </script>
+            </div>
+            <div class="col-md-4">
+                <div class="tab-content overflow-auto" style="height:54vh">
+                    <h2>Comments...</h2>
+                    <hr>
+                    {% if comment_list %}
+                    {% for comment in comment_list %}
+                    <div class="inline">
+                        <strong>{{comment.user.first_name}} {{comment.user.last_name}}</strong>
+                        <small class="date">{{comment.date_added}}</small>
+                    </div>
+                    {{ comment.body }}<br><br>
+                    {% endfor %}
+                    {% else %}
+                    <h2 class="ml-2" style="color:red;">No comments yet !</h2>
+                    {% endif %}
+                </div>
+                <div>
+                    <form method="POST" class="form-group">
+                        {% csrf_token %}
+                        {{ comment_form.body|as_crispy_field }}
+                        <button type='Submit' class="btn btn-dark">Add Comment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="mt-5 mb-4" style="text-align:center;"><strong>Recently Added</strong></h1>
+    <div class="col-md-12 mt-4">
+        <div class="row justify-content-center">
+            {% for items in room_list %}
+            <div class="card ml-3" style="width: 18rem;">
+                <img class="card-img-top" style="width:100%;height:200px;"
+                     src="{{ items.room_images.room_img.url }}"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Rs. {{items.price}}</h5>
+                    <p style="color:#00334d;">{{items.location.municipality}}-{{items.location.ward_no}},
+                        {{items.location.district}},<br>
+                        {{items.location.state}}</p>
+                    <hr>
+                    <p style="color:#00334d;"><i class="fas fa-square mr-1"></i> {{ items.size }} Sq Ft</p>
+                    <form action="{% url 'room_details' items.id %}" method="POST"
+                          class="d-inline">
+                        {% csrf_token %}
+                        <button type='Submit' class="btn btn-dark">View Details</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

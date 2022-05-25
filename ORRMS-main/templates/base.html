@@ -1,0 +1,179 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rentmate</title>
+    {{ add_flat_form.media }}
+    {{ add_room_form.media }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'MarkerCluster.Default.css' %}">
+    <link rel="stylesheet" href="{% static 'MarkerCluster.css' %}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/"><img style="width:212px;height:50px;" src="{% static 'images/logo1.png' %}"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'rent_view'%}">Rent <span class="sr-only">(current)</span></a>
+
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Buy</a>
+            </li>
+        </ul>
+        {% if user.is_authenticated %}
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link font-weight-bold">Welcome {{ request.user.first_name }}</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link text-danger" href="http://127.0.0.1:8000/account/logout/">Logout</a>
+            </li>
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Select
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'property_list' user.id %}">My Property</a>
+                    <a class="dropdown-item" href="{% url 'watchlist' %}">My Watchlist</a>
+                </div>
+            </li>
+        </ul>
+        {% else %}
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="http://127.0.0.1:8000/account/login">Login <span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="http://127.0.0.1:8000/account/signup">Register</a>
+            </li>
+        </ul>
+        {% endif %}
+
+        <form method="POST" action="{% url 'search_result' %}" class="form-inline my-2 my-lg-0">
+            {% csrf_token %}
+            <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+
+        </form>
+    </div>
+</nav>
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+{% block content %}
+
+{% endblock content %}
+
+<footer class="mt-5">
+    <div class="col-md-12">
+        <div class="row ml-3">
+            <div class="main_content">
+                <div class="left box col-md-4">
+                    <img style="width:212px;height:50px;" src="{% static 'images/logo1.png' %}">
+                    <div class="content">
+                        <p style="color:#999;">Rentmate.com is a web portal designed to reshape the conventional pattern
+                            of
+                            rental solution for flat and rooms all around Nepal. This portal
+                            allows people to search and book properties via online presence.</p>
+                        <div class="social">
+                            <a href="#"><span class="fab fa-facebook-f"></span></a>
+                            <a href="#"><span class="fab fa-youtube"></span></a>
+                            <a href="#"><span class="fab fa-twitter"></span></a>
+                            <a href="#"><span class="fab fa-instagram"></span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="link box col-md-2">
+                    <div class="content">
+                        <h2>Useful Links</h2>
+                        <div class="redirect" style="color:#999;">
+                            <p class="ml-2 m-0">Rent</p>
+                            <p class="ml-2 m-0">My Property</p>
+                            <p class="ml-2 m-0">My Watchlist</p>
+                            <p class="ml-2 m-0">Contact Us</p>
+                            <p class="ml-2 m-0">About Us</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="extra box col-md-2">
+                    <div class="content">
+                        <h2>Featured Cities</h2>
+                        <div class="redirect" style="color:#999;">
+                            <p class="ml-2 m-0">Kathmandu</p>
+                            <p class="ml-2 m-0">Bhaktapur</p>
+                            <p class="ml-2 m-0">Mahendranagar</p>
+                            <p class="ml-2 m-0">Pokhara</p>
+                            <p class="ml-2 m-0">Itharari</p>
+                            <p class="ml-2 m-0">Kakarvitta</p>
+                            <p class="ml-2 m-0">Chitwan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="center box col-md-3">
+                    <div class="content">
+                        <h2 class="ml-3">Address</h2>
+                        <div class="place">
+                            <span class="fas fa-map-marker-alt"></span>
+                            <span class="text" style="color:#999;">Sanepa, Lalitpur</span>
+                        </div>
+                        <div class="phone">
+                            <span class="fas fa-phone-alt"></span>
+                            <span class="text" style="color:#999;">+977-9812345678</span>
+                        </div>
+                        <div class="email">
+                            <span class="fas fa-envelope"></span>
+                            <span class="text" style="color:#999;">Rentmate@info.org.np</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>All right reserverd by &copy;Rentmate 2020</p>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

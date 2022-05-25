@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+.jumbotron{
+    width:990px;
+}
+</style>
+<div class="container">
+    <div class="col-md-10 offset-md-1 mt-5">
+        <div class="jumbotron">
+            <h1 class="display-4">{{user.first_name}}'s Property </h1>
+            <p class="lead">Rentmate: Rent your room to the best-qualified tenants.</p>
+            <hr class="mt-4 md-3">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active text-dark" id="flat-tab" data-toggle="tab" href="#flat" role="tab"
+                       aria-controls="flat" aria-selected="true"><h6>My Flats</h6></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" id="room-tab" data-toggle="tab" href="#room" role="tab"
+                       aria-controls="room" aria-selected="false"><h6>My Rooms</h6></a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="flat" role="tabpanel" aria-labelledby="flat-tab">
+                    <div class="row">
+                        <div class="col-md-12 pr-0 mr-0">
+                            <table class="table">
+                                <thead class="border-bottom font-weight-bold">
+                                <tr>
+                                    <td class="pl-4">P No.</td>
+                                    <td class="pl-4">State</td>
+                                    <td class="pl-4">District</td>
+                                    <td class="pl-4">Price</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for items in flat_list %}
+                                <tr>
+                                    <td class="pb-3 pl-4">{{items.flat_id}}</td>
+                                    <td class="pb-3 pl-4">{{items.location.state}}</td>
+                                    <td class="pb-3 pl-4">{{items.location.district}}</td>
+                                    <td class="pb-3 pl-4">{{items.price}}</td>
+                                    <td>
+                                        <form action="{% url 'flat_update' items.flat_id %}">
+                                            <button class="btn btn-muted py-0" type='Submit'><i class="far fa-edit"
+                                                                                                style='font-size:18px'></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'flat_delete' items.flat_id %}" method="POST"
+                                              class="d-inline">
+                                            {% csrf_token %}
+                                            <button class="btn btn-muted py-0" type='Submit'><i class="fa fa-trash"
+                                                                                                style="font-size:18px;color:black"></i>
+                                            </button>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'property_details' items.flat_id %}" method="POST"
+                                              class="d-inline">
+                                            {% csrf_token %}
+                                            <button type='Submit' class="btn btn-success">Details</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="room" role="tabpanel" aria-labelledby="room-tab">
+                    <div class="row">
+                        <div class="col-md-12 pr-0 mr-0">
+                            <table class="table">
+                                <thead class="border-bottom font-weight-bold">
+                                <tr>
+                                    <td class="pl-4">P No.</td>
+                                    <td class="pl-4">State</td>
+                                    <td class="pl-4">District</td>
+                                    <td class="pl-4">Price</td>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for items in room_list %}
+                                <tr>
+                                    <td class="pb-3 pl-4">{{items.id}}</td>
+                                    <td class="pb-3 pl-4">{{items.location.state}}</td>
+                                    <td class="pb-3 pl-4">{{items.location.district}}</td>
+                                    <td class="pb-3 pl-4">{{items.price}}</td>
+                                    <td>
+                                        <form action="{% url 'room_update' items.id %}">
+                                            {% csrf_token %}
+                                            <button class="btn btn-muted py-0" type='Submit'><i class="far fa-edit"
+                                                                                                style='font-size:18px'></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'room_delete' items.id %}" method="POST"
+                                              class="d-inline">
+                                            {% csrf_token %}
+                                            <button class="btn btn-muted py-0" type='Submit'><i class="fa fa-trash"
+                                                                                                style="font-size:18px;color:black"></i>
+                                            </button>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'room_details' items.id %}" method="POST"
+                                              class="d-inline">
+                                            {% csrf_token %}
+                                            <button type='Submit' class="btn btn-success">Details</button>
+                                        </form>
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

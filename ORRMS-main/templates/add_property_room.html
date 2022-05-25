@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div class="col-md-10 offset-md-4 mt-5">
+        <h1>Add your property.</h1>
+        <p>Rent your room to the best-qualified tenants</p>
+    </div>
+</div>
+<div class="container">
+    <div class="col-md-10 offset-md-1 mt-5">
+        <div class="jumbotron">
+            <form method="POST" class="form-group" action='{{ action_url }}' enctype='multipart/form-data'>
+                {% csrf_token %}
+                <h1>Location Details</h1>
+                <hr>
+                <div class="col-md-10">
+                    {{ location_form.state|as_crispy_field }}
+                </div>
+                <div class="col-md-10">
+                    {{ location_form.district|as_crispy_field }}
+                </div>
+                <div class="row ml-1">
+                    <div class="col-md-6">
+                        {{location_form.municipality|as_crispy_field}}
+                    </div>
+                    <div class="col-md-4">
+                        {{location_form.ward_no|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    {{ add_room_form.phone_number|as_crispy_field }}
+                </div>
+                <div class="row ml-1">
+                    <div class="col-md-10">
+                        {{ add_room_form.coordinates|as_crispy_field }}
+                    </div>
+                </div>
+
+                <h1>Property Details</h1>
+                <hr>
+                <div class="row ml-1">
+                    <div class="col-md-10">
+                        {{ add_room_form.size|as_crispy_field }}
+                    </div>
+                    <div class="col-md-10">
+                        {{ add_room_form.short_description|as_crispy_field }}
+                    </div>
+                    <div class="col-md-5">
+                        {{add_room_form.water_facility|as_crispy_field}}
+                    </div>
+                    <div class="col-md-5">
+                        {{add_room_form.electricity|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="col-md-4 ml-1">
+                    {{add_room_form.Parking_facility|as_crispy_field}}
+                </div>
+                <h1>Image Details</h1>
+                <hr>
+                <div class="row ml-1">
+                    <div class="col-md-6">
+                        {{room_image_form.room_img|as_crispy_field}}
+                    </div>
+                </div>
+                <h1>Price Details</h1>
+                <hr>
+                <div class="col-md-10">
+                    {{ add_room_form.price|as_crispy_field }}
+                </div>
+                <button type='Submit' class="btn btn-success ml-3 mt-3">Add property</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
